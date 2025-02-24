@@ -5,7 +5,6 @@ import { useStore } from "../store";
 export const Route = createFileRoute("/home")({
   beforeLoad: async () => {
     const { idInstance, apiTokenInstance } = useStore.getState();
-    console.log("before /home", idInstance);
     if (!idInstance || !apiTokenInstance) {
       throw redirect({ to: "/login" });
     }

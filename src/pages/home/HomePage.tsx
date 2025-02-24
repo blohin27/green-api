@@ -6,7 +6,6 @@ import { PhoneModal } from "./components/PhoneModal.tsx";
 import { ChatContactCard } from "./components/ChartContactCard.tsx";
 
 export default function HomePage() {
-  console.log("HomeScreen");
   const {
     idInstance,
     setIdInstance,

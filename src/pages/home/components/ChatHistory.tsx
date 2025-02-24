@@ -26,7 +26,6 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ selectedPhone }) => {
         const { body, receiptId } = response.data;
 
         if (body.typeWebhook === "incomingMessageReceived") {
-          console.log("body", body.senderData.chatId);
           const newMessage = {
             idMessage: body.idMessage,
             type: body.messageData.typeMessage,
@@ -46,6 +45,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ selectedPhone }) => {
       console.error("Ошибка при получении сообщений:", error);
     }
   };
+
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "auto" });
   };
@@ -72,8 +72,8 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ selectedPhone }) => {
     let isMounted = true;
     const fetchWithDelay = async () => {
       while (isMounted) {
-        await fetchMessages(); // Дожидаемся выполнения fetchMessages
-        await new Promise((res) => setTimeout(res, 3000)); // Задержка 3 секунды
+        await fetchMessages();
+        await new Promise((res) => setTimeout(res, 2000));
       }
     };
     scrollToBottom();
@@ -81,13 +81,11 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ selectedPhone }) => {
     return () => {
       isMounted = false;
     };
-  }, [fetchMessages, selectedPhone]);
+  }, [selectedPhone]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages[selectedPhone]]);
-
-  console.log("storeMessage", useStore.getState().messages);
   return (
     <div className="p-4 bg-white rounded-2xl shadow-lg flex flex-col h-full">
       <div className="flex-grow flex flex-col justify-between">
@@ -95,9 +93,9 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ selectedPhone }) => {
           {selectedPhone}
         </div>
         <ul className="space-y-2 overflow-y-auto flex-grow max-h-[740px] scrollbar-hide">
-          {(messages[selectedPhone] || []).map((msg) => (
+          {(messages[selectedPhone] || []).map((msg, index) => (
             <li
-              key={msg?.idMessage}
+              key={msg?.idMessage + msg.textMessage + index}
               className={`p-3 rounded-lg ${
                 msg?.senderId.startsWith(selectedPhone)
                   ? "bg-green-100 text-left"
